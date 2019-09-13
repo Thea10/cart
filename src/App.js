@@ -3,24 +3,26 @@ import {connect} from 'react-redux';
 import ProductList from './components/ProductList';
 import Filter from './components/Filter';
 import Cart from './components/Cart';
-import {displayList, setSearchField} from './actions';
+import {displayList, setSearchField, setSizeFilter} from './actions';
 import './App.css';
 import Typed from 'typed.js';
 
 
-const mapStateToProps = state =>{
-    return {
-      searchField: state.searchProducts.searchField,
-        filteredProducts: state.displayList.filteredProducts,
-        isPending: state.displayList.isPending,
-        error: state.displayList.error
-    }
+const mapStateToProps = state => {
+  return {
+    searchField: state.searchProducts.searchField,
+    filteredProducts: state.displayList.filteredProducts,
+    isPending: state.displayList.isPending,
+    error: state.displayList.error,
+    filterSizeField: state.filterSize.filterField,
+  }
 }
 
-const mapDispatchToProps = (dispatch) =>{
-  return{
+const mapDispatchToProps = (dispatch) => {
+  return {
     ondisplayList: () => dispatch(displayList()),
     onSearch: (e) => dispatch(setSearchField(e.target.value)),
+    filterSize: (e) => dispatch(setSizeFilter(e.target.value)),
   }
 }
 
@@ -29,45 +31,24 @@ class App extends Component {
     super(props);
     this.state = {
       products: this.props.filteredProducts,
-    //  filteredProducts: [],
-      size: '',
+      //  filteredProducts: [],
+      // size: '',
       sort: '',
       cartItems: [],
-      selectedsize: '',
       strings: ['Shop with us, ^2000 With Ease', 'Start Shopping'],
     }
   }
 
   componentWillMount() {
-     
-    /*fetchData("http://localhost:8000/products");
-    async function getitems() {
-    const resp = await fetch("http://localhost:8000/products")
-    const data = await resp.json()
-    console.log(data);
-    
-    }
-
-    getitems(); 
-    fetch("db.json")
-      .then(res => res.json())
-      .then(data => this.setState({
-        products: data.products,
-        filteredProducts: data.products
-      })); */
-
     if (localStorage.getItem("cartItems")) {
       this.setState({ cartItems: JSON.parse(localStorage.getItem("cartItems")) })
     }
 
-    //  console.log(this.state.sort);
-
   }
 
   componentDidMount() {
-
     this.props.ondisplayList();
-  
+
     const { strings } = this.state;
     // You can pass other options here, such as typing speed, back speed, etc.
     const options = {
@@ -75,10 +56,10 @@ class App extends Component {
       typeSpeed: 100,
       backSpeed: 50,
       backDelay: 5000,
-       showCursor: false,
-       
+      showCursor: false,
+
     };
-    // this.el refers to the <span> in the render() method
+    //#type refers to the <span> in the render() method, where we want to display the text
     this.typed = new Typed("#type", options);
 
   }
@@ -86,7 +67,7 @@ class App extends Component {
   componentWillUnmount() {
     // Make sure to destroy Typed instance on unmounting
     // to prevent memory leaks
-   
+
     this.typed.destroy();
   }
 
@@ -99,9 +80,6 @@ class App extends Component {
         items = this.props.filteredProducts.sort((a, b) => (a.id > b.id ? 1 : -1));
       }
 
-      if (state.size !== '') {
-        items = this.props.filteredProducts.filter((a) => (a.sizes.includes(state.size)) ? true : false);
-      }
       return { filteredProducts: items }
     })
   }
@@ -113,37 +91,10 @@ class App extends Component {
     this.listProducts();
   }
 
-  /* filterBySize = () => {
-     this.setState(state => {
-       let items
-       if (state.size !== '') {
-         items = state.products.filter((a) => (a.sizes.includes(state.size)) ? true : false);
-       } else {
-         items = state.products.sort((a, b) => (a.id > b.id ? 1 : -1));
-       }
-       return { filteredProducts: items }
-     });
-   } */
-
-  filterSize = (e) => {
-    this.setState({
-      size: e.target.value
-    })
-    //    this.filterBySize();
-    this.listProducts();
-  }
-
-
-
   handleAddToCart = (e, product, si) => {
-   // console.log(si);
-
-    //  if (!si) throw Error;
-
     this.setState(state => {
       let cartItems = state.cartItems;
       let inCart = false;
-     // state.selectedsize = si;
 
       cartItems.forEach(item => {
         if (item.id === product.id) {
@@ -151,38 +102,31 @@ class App extends Component {
           inCart = true;
           item.count++;
           item.price = item.count * item.price;
-        //  console.log(item);
         }
       });
 
       if (!inCart) {
         cartItems.push({...product, count: 1, selectedsize: [si]});
-      }
-
-      localStorage.setItem( "cartItems", JSON.stringify(cartItems));
-      return cartItems;
-    });
-
   }
 
+  localStorage.setItem( "cartItems", JSON.stringify(cartItems));
+      return cartItems;
+    });
+}
 
 handleRemoveFromCart = (e, item) => {
-  //console.log(e, item);
   this.setState(state => {
     const cartItems = state.cartItems.filter(itm => itm.id !== item.id);
     localStorage.setItem("cartItems", cartItems);
     return { cartItems };
   })
-
 }
 
 handleCheckout = (e) => {
   console.log(e);
 }
 
-
-
-render() {
+events = () => {
   window.addEventListener('scroll', (e) => {
     var nav = document.getElementById('nav');
     var navbtn = nav.querySelectorAll('button');
@@ -207,37 +151,43 @@ render() {
     });
 
   })
- // console.log(this.props);
-  const output = this.props.filteredProducts.filter(product =>{
-            return product.title.toLowerCase().includes(this.props.searchField.toLowerCase());
-        });
+}
+
+render() {
+  this.events();
+
+  let {filteredProducts, filterSizeField, searchField, onSearch, filterSize  } = this.props;
+  // console.log(this.props);
+  const output = filteredProducts.filter(product => {
+    if (filterSizeField && searchField) {
+      return product.sizes.includes(filterSizeField) && product.title.toLowerCase().includes(searchField.toLowerCase())
+    } else if (!filterSizeField && !searchField) {
+      return product.title.toLowerCase().includes(searchField.toLowerCase())
+    } else if (!filterSizeField && searchField) {
+      return product.title.toLowerCase().includes(searchField.toLowerCase())
+    } else if (!searchField && filterSizeField) {
+      return product.sizes.includes(filterSizeField)
+    }
+  });
 
   return (
     <div>
       <header id="nav" className="navbar navbar-fixed-top  navbar-expand-md  navbar-light no-margin" >
         <button className="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbar"> <span className="navbar-toggler-icon"> </span> </button>
         <h1  style={{ marginLeft: 2 + "%" }}> My Shopping Cart </h1>
-
-        <span
-          style={{ whiteSpace: 'pre', marginLeft: 2 + "%" }}
-          ref={(el) => { this.el = el; } }
-          id="type"
-          />
-
+        <span style={{ whiteSpace: 'pre', marginLeft: 2 + "%" }} id="type" />
         <div className="collapse navbar-collapse" id="navbar">
-
           <button className="btn btn-primary"> (LogIn/LogOut) </button>
           <button className="btn btn-primary"> About Us </button>
         </div>
-        <input className="form-control mr-sm-2" type="search" placeholder="Search" onChange={this.props.onSearch} />
-
+        <input className="form-control mr-sm-2" type="search" placeholder="Search" onChange={onSearch} />
       </header>
-      <Filter size={this.state.size} sort={this.state.sort} filterSize={this.filterSize} filterPrice ={this.filterPrice} count ={this.props.filteredProducts.length}/>
+      <Filter size={filterSizeField} sort={this.state.sort} filterSize={filterSize} filterPrice ={this.filterPrice} count ={filteredProducts.length}/>
       <hr />
       <div className="container">
         <div className="row list">
           <ul className="col-md-8">
-            <ProductList products={output} handleAddToCart ={this.handleAddToCart} SelectSize={this.SelectSize} size={this.state.selectedsize}  />
+            <ProductList products={output} handleAddToCart ={this.handleAddToCart} SelectSize={this.SelectSize}  />
           </ul>
           <div className="col-md-4">
             <Cart cartItems={this.state.cartItems} handleCheckout={this.handleCheckout} handleRemoveFromCart = {this.handleRemoveFromCart}/>
