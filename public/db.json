@@ -1,0 +1,94 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "sku": 18644119330491312,
+      "title": "Sphynx Tie Dye Grey T-Shirt",
+      "description": "Sphynx Tie Dye Grey",
+      "sizes": ["X", "L", "XL", "XXL"],
+      "price": 10,
+      "isFreeShipping": true
+    },
+
+    {
+      "id": 2,
+      "sku": 11854078013954528,
+      "title": "Danger Knife Grey T-Shirt",
+      "description": "Danger Knife Grey",
+      "sizes": ["X", "M", "L"],
+      "price": 14.9,
+      "isFreeShipping": true
+    },
+
+    {
+      "id": 3,
+      "sku": 876661122392077,
+      "title": "White DGK Script Tee",
+      "description": "White DGK Script",
+      "sizes": ["X", "M", "L"],
+      "price": 14.9,
+      "isFreeShipping": true
+    },
+
+    {
+      "id": 4,
+      "sku": 9197907543445677,
+      "title": "Born On The Streets  T-Shirt",
+      "description": "Born On The Streets",
+      "sizes": ["XL"],
+      "price": 25.9,
+      "isFreeShipping": false
+    },
+
+    {
+      "id": 5,
+      "sku": 10547961582846888,
+      "title": "Tso 3D Short Sleeve T-Shirt A",
+      "description": "Tso 3D Short Sleeve",
+      "sizes": ["X", "L", "XL"],
+      "price": 10.9,
+      "isFreeShipping": false
+    },
+
+    {
+      "id": 6,
+      "sku": 6090484789343891,
+      "title": "Man Tie Dye Cinza Grey T-Shirt",
+      "description": "Man Tie Dye Cinza Grey",
+      "sizes": ["XL", "XXL"],
+      "price": 49.9,
+      "isFreeShipping": false
+    },
+
+    {
+      "id": 7,
+      "sku": 18532669286405342,
+      "title": "Crazy Monkey Black T-Shirt",
+      "description": "1977 Infantil",
+      "sizes": ["S"],
+      "style": "Preto com listras brancas",
+      "price": 22.5,
+      "isFreeShipping": true
+    },
+
+    {
+      "id": 8,
+      "sku": 5619496040738316,
+      "title": "Tso 3D Black T-Shirt",
+      "description": "",
+      "sizes": ["XL"],
+      "style": "Azul escuro",
+      "price": 18.7,
+      "isFreeShipping": false
+    },
+    {
+      "id": 9,
+      "sku": 11600983276356165,
+      "title": "Crazy Monkey Grey",
+      "description": "",
+      "sizes": ["L", "XL"],
+      "price": 134.9,
+      "isFreeShipping": true
+    }
+  ]
+}
