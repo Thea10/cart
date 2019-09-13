@@ -5,12 +5,12 @@ import {Provider} from 'react-redux';
 import {createStore, applyMiddleware, combineReducers } from 'redux';
 import {createLogger} from 'redux-logger';
 import thunkMiddleware from 'redux-thunk';
-import {displayList, searchProducts} from './reducers';
+import {displayList, searchProducts, filterSize} from './reducers';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
 const logger = createLogger();
-const rootReducer = combineReducers ({displayList, searchProducts});
+const rootReducer = combineReducers ({displayList, searchProducts, filterSize});
 const store = createStore(rootReducer, applyMiddleware(thunkMiddleware, /*logger*/));
 
 
