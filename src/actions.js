@@ -2,7 +2,8 @@ import {
     CHANGE_SEARCHFIELD,
     REQUEST_LIST_PENDING,
     REQUEST_LIST_SUCCESS,
-    REQUEST_LIST_FAILED
+    REQUEST_LIST_FAILED,
+    FILTER_SIZE_LIST
 } from './constants.js';
 
 
@@ -34,6 +35,16 @@ export const setSearchField = (text) => {
         payload: text //cmmonly used in redux: like sending whatevr data is needed to go on to the reducer
     }
 }
+
+export const setSizeFilter = (text) => {
+    // console.log(text);
+    return {
+        type:  FILTER_SIZE_LIST, //constant, usually capitalized in javascript
+        payload: text //cmmonly used in redux: like sending whatevr data is needed to go on to the reducer
+    }
+}
+
+
 
 
 export default displayList;
